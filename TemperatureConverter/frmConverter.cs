@@ -1,11 +1,13 @@
-﻿
+﻿using System;
+using System.Windows.Forms;
+
 namespace TemperatureConverter
 {
-    using System;
-    using System.Windows.Forms;
-
     public partial class frmConverter : Form
     {
+        private const float absZeroCelsius = -273.15f;
+        private const float absZeroFahrenheit = -459.67f;
+
         public frmConverter()
         {
             InitializeComponent();
@@ -16,12 +18,19 @@ namespace TemperatureConverter
             float celsius;
             if (float.TryParse(txtCelsius.Text, out celsius))
             {
-                float fahrenheit = ((celsius * 9) / 5) + 32;
-                lblFahrenheit.Text = string.Format("{0}{1}F", fahrenheit.ToString(), Convert.ToChar(176));
+                if (celsius >= absZeroCelsius)
+                {
+                    float fahrenheit = ((celsius * 9) / 5) + 32;
+                    lblFahrenheit.Text = string.Format("{0}{1}F", fahrenheit.ToString(), Convert.ToChar(176));
+                }
+                else
+                {
+                    MessageBox.Show(string.Format(Properties.Resources.AbsoluteZeroError, absZeroCelsius.ToString(), Convert.ToChar(176), "C"), Properties.Resources.AbsoluteZeroErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
             }
             else
             {
-                MessageBox.Show("Error, you must enter a valid number.", "Temperature Converter - Conversion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Properties.Resources.ConversionError, Properties.Resources.ConversionErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -30,12 +39,19 @@ namespace TemperatureConverter
             float fahrenheit;
             if (float.TryParse(txtFahrenheit.Text, out fahrenheit))
             {
-                float celsius = ((fahrenheit - 32) * 5) / 9;
-                lblCelsius.Text = string.Format("{0}{1}C", celsius.ToString(), Convert.ToChar(176));
+                if (fahrenheit >= absZeroFahrenheit)
+                {
+                    float celsius = ((fahrenheit - 32) * 5) / 9;
+                    lblCelsius.Text = string.Format("{0}{1}C", celsius.ToString(), Convert.ToChar(176));
+                }
+                else
+                {
+                    MessageBox.Show(string.Format(Properties.Resources.AbsoluteZeroError, absZeroFahrenheit.ToString(), Convert.ToChar(176), "F"), Properties.Resources.AbsoluteZeroErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
             }
             else
             {
-                MessageBox.Show("Error, you must enter a valid number.", "Temperature Converter - Conversion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Properties.Resources.ConversionError, Properties.Resources.ConversionErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
